@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="onboardingModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ProductSolds" Relationship="onboardingModel.FK_Customer_ProductSold" FromRole="Customer" ToRole="ProductSold" />
+  </EntityType>
+  <EntityContainer Name="onboardingEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Customers" EntityType="Self.Customer" />
+    <EntitySet Name="Products" EntityType="onboardingModel.Product" />
+    <EntitySet Name="ProductSolds" EntityType="onboardingModel.ProductSold" />
+    <EntitySet Name="Stores" EntityType="onboardingModel.Store" />
+    <AssociationSet Name="FK_Customer_ProductSold" Association="onboardingModel.FK_Customer_ProductSold">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="ProductSold" EntitySet="ProductSolds" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Product_ProductSold" Association="onboardingModel.FK_Product_ProductSold">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="ProductSold" EntitySet="ProductSolds" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Store_ProductSold" Association="onboardingModel.FK_Store_ProductSold">
+      <End Role="Store" EntitySet="Stores" />
+      <End Role="ProductSold" EntitySet="ProductSolds" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="ProductSolds" Relationship="onboardingModel.FK_Product_ProductSold" FromRole="Product" ToRole="ProductSold" />
+  </EntityType>
+  <EntityType Name="ProductSold">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductId" Type="Int32" />
+    <Property Name="CustomerId" Type="Int32" />
+    <Property Name="StoreId" Type="Int32" />
+    <Property Name="DateSold" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Customer" Relationship="onboardingModel.FK_Customer_ProductSold" FromRole="ProductSold" ToRole="Customer" />
+    <NavigationProperty Name="Product" Relationship="onboardingModel.FK_Product_ProductSold" FromRole="ProductSold" ToRole="Product" />
+    <NavigationProperty Name="Store" Relationship="onboardingModel.FK_Store_ProductSold" FromRole="ProductSold" ToRole="Store" />
+  </EntityType>
+  <EntityType Name="Store">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ProductSolds" Relationship="onboardingModel.FK_Store_ProductSold" FromRole="Store" ToRole="ProductSold" />
+  </EntityType>
+  <Association Name="FK_Customer_ProductSold">
+    <End Type="onboardingModel.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="onboardingModel.ProductSold" Role="ProductSold" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductSold">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Product_ProductSold">
+    <End Type="onboardingModel.Product" Role="Product" Multiplicity="0..1" />
+    <End Type="onboardingModel.ProductSold" Role="ProductSold" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductSold">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Store_ProductSold">
+    <End Type="onboardingModel.Store" Role="Store" Multiplicity="0..1" />
+    <End Type="onboardingModel.ProductSold" Role="ProductSold" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Store">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductSold">
+        <PropertyRef Name="StoreId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
